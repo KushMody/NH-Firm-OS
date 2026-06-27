@@ -13,7 +13,7 @@ export async function createClient(data: FormData) {
 
   // Generate a random password for the client portal
   const tempPassword = Math.random().toString(36).slice(-8);
-  const bcrypt = require("bcrypt");
+  const bcrypt = require("bcryptjs");
   const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
   // 1. Create the User (for login)
