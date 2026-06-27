@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { AlertCircle, ArrowUpRight, CheckCircle2, Clock, IndianRupee } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
