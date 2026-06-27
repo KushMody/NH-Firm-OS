@@ -13,7 +13,7 @@ export default async function AdminOverview() {
       dueDate: { lte: new Date(new Date().setDate(new Date().getDate() + 7)) } // Due in next 7 days
     }
   });
-  
+
   const completedTasks = await prisma.task.count({
     where: { status: "COMPLETED" }
   });
@@ -22,7 +22,7 @@ export default async function AdminOverview() {
     _sum: { amount: true },
     where: { status: "PAID" }
   });
-  
+
   const totalRevenue = totalRevenueData._sum.amount || 0;
 
   const urgentTasks = await prisma.task.findMany({
@@ -108,7 +108,7 @@ export default async function AdminOverview() {
                 </tr>
               </thead>
               <tbody className="text-sm">
-                {urgentTasks.map((task) => (
+                {urgentTasks.map((task: any) => (
                   <tr key={task.id} className="border-b border-slate-50">
                     <td className="py-4 font-medium text-slate-900">{task.client?.companyName || "Unknown"}</td>
                     <td className="py-4 text-slate-600">{task.title}</td>
