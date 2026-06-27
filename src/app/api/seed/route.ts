@@ -97,8 +97,8 @@ export async function POST() {
     });
 
     return NextResponse.json({ message: "Seed successful" });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Seed error:", error);
-    return NextResponse.json({ error: "Failed to seed database" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to seed database" }, { status: 500 });
   }
 }
