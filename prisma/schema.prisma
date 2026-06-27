@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("CLIENT") // ADMIN, STAFF, CLIENT
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  tasksAssigned Task[] @relation("StaffTasks")
+  clientProfile Client?
+}
+
+model Client {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  companyName    String?
+  gstNumber      String?
+  panNumber      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks          Task[]
+  documents      Document[]
+  invoices       Invoice[]
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  status      String     @default("DOC_COLLECTION") // DOC_COLLECTION, PREPARATION, REVIEW, FILING, COMPLETED
+  dueDate     DateTime
+  clientId    String
+  staffId     String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  client      Client     @relation(fields: [clientId], references: [id])
+  staff       User?      @relation("StaffTasks", fields: [staffId], references: [id])
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  name      String
+  url       String
+  clientId  String
+  createdAt DateTime @default(now())
+
+  client    Client   @relation(fields: [clientId], references: [id])
+}
+
+model Invoice {
+  id          String   @id @default(cuid())
+  amount      Float
+  status      String   @default("UNPAID") // UNPAID, PAID
+  description String
+  clientId    String
+  createdAt   DateTime @default(now())
+
+  client      Client   @relation(fields: [clientId], references: [id])
+}
